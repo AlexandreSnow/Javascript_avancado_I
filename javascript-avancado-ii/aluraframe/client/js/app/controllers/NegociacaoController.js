@@ -27,6 +27,12 @@ class NegociacaoController {
         this._mensagem.texto = 'Negociação adicionada com sucesso';
         this._limpaFormulario();   
     }
+
+    importaNegociacoes() {
+        let xhr = new XMLHttpRequest();
+
+        xhr.open('GET')
+    }
     
     apaga() {
         this._listaNegociacoes.esvazia();   
@@ -48,4 +54,5 @@ class NegociacaoController {
         this._inputValor.value = 0.0;
         this._inputData.focus();   
     }
+
 }
