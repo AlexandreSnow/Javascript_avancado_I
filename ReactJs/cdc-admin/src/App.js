@@ -12,11 +12,21 @@ class App extends Component {
   }
 
   componentWillMount() {
+    /*var lista = [
+      {
+        id: '1',
+        nome: 'alexandre',
+        email: 'alexandre@email.com',
+        senha: '123456'
+      }
+    ];
+    this.setState({lista: lista});*/
+
     $.ajax({
-      url:'http://localhost:8080/api/autores',
+      url:'https://cdc-react.herokuapp.com/api/autores',
       dataType: 'json',
       success: resposta => {
-        this.setState({lista: resposta});
+        this.setState({lista: resposta.slice(0, 5)});
       }
     })
   }
@@ -24,27 +34,27 @@ class App extends Component {
   render() {
     return (
       <div id="layout">
-        <a href="#menu" id="menuLink" class="menu-link">
+        <a href="#menu" id="menuLink" className="menu-link">
           <span />
         </a>
         <div id="menu">
-          <div class="pure-menu">
-            <a class="pure-menu-heading" href="#">
+          <div className="pure-menu">
+            <a className="pure-menu-heading" href="index.html">
               Company
             </a>
-            <ul class="pure-menu-list">
-              <li class="pure-menu-item">
-                <a href="#" class="pure-menu-link">
+            <ul className="pure-menu-list">
+              <li className="pure-menu-item">
+                <a href="index.html" className="pure-menu-link">
                   Home
                 </a>
               </li>
-              <li class="pure-menu-item">
-                <a href="#" class="pure-menu-link">
+              <li className="pure-menu-item">
+                <a href="index.html" className="pure-menu-link">
                   Autor
                 </a>
               </li>
-              <li class="pure-menu-item">
-                <a href="#" class="pure-menu-link">
+              <li className="pure-menu-item">
+                <a href="index.html" className="pure-menu-link">
                   Livro
                 </a>
               </li>
@@ -93,7 +103,7 @@ class App extends Component {
                   {
                     this.state.lista.map(autor => {
                       return (
-                        <tr>
+                        <tr key="{autor.id}">
                           <td>{autor.nome}</td>
                           <td>{autor.email}</td>
                         </tr>
