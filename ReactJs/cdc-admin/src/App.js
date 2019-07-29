@@ -8,27 +8,56 @@ class App extends Component {
 
   constructor() {
     super();
-    this.state = {lista: []};
+    this.state = {lista: [], nome: '', email: '', senha: ''};
+    this.enviaForm = this.enviaForm.bind(this);
+    this.setNome = this.setNome.bind(this);
+    this.setEmail = this.setEmail.bind(this);
+    this.setSenha = this.setSenha.bind(this);
+    this.setResposta = this.setResposta.bind(this);
+
   }
 
-  componentWillMount() {
-    /*var lista = [
-      {
-        id: '1',
-        nome: 'alexandre',
-        email: 'alexandre@email.com',
-        senha: '123456'
-      }
-    ];
-    this.setState({lista: lista});*/
-
+  componentDidMount() {
     $.ajax({
       url:'https://cdc-react.herokuapp.com/api/autores',
       dataType: 'json',
+      success: resposta => this.setResposta(resposta)
+    });
+  }
+
+  enviaForm(evento) {
+    evento.preventDefault();
+    console.log('Enviando dados');
+    $.ajax({
+      url:"https://cdc-react.herokuapp.com/api/autores",
+      contentType: 'application/json',
+      dataType:'json',
+      type:'post',
+      data:JSON.stringify({nome: this.state.nome, email: this.state.email, senha: this.state.senha}),
       success: resposta => {
-        this.setState({lista: resposta.slice(0, 5)});
+        console.log("enviado com sucesso");
+        this.setResposta(resposta);
+      },
+      error: resposta => {
+          console.log("erro");
       }
-    })
+    });
+  }
+
+  setResposta(resposta) {
+    this.setState({lista: resposta.slice(resposta.length - 5, resposta.length)});
+  }
+
+  setNome(evento) {
+    this.setState({nome: evento.target.value});
+  }
+
+  setEmail(evento) {
+    this.setState({email: evento.target.value});
+  }
+
+  setSenha(evento) {
+    this.setState({senha: evento.target.value});
   }
 
   render() {
@@ -61,31 +90,31 @@ class App extends Component {
             </ul>
           </div>
         </div>
+
         <div id="main">
           <div className="header">
             <h1>Cadastro de Autores</h1>
           </div>
           <div className="content" id="content">
             <div className="pure-form pure-form-aligned">
-              <form className="pure-form pure-form-aligned">
+              <form className="pure-form pure-form-aligned" onSubmit={this.enviaForm} method="POST">
                 <div className="pure-control-group">
                   <label htmlFor="nome">Nome</label>
-                  <input id="nome" type="text" name="nome" value="" />
+                  <input id="nome" type="text" name="nome" value={this.state.nome} onChange={this.setNome}/>
                 </div>
                 <div className="pure-control-group">
                   <label htmlFor="email">Email</label>
-                  <input id="email" type="email" name="email" value="" />
+                  <input id="email" type="email" name="email" value={this.state.email} onChange={this.setEmail}/>
                 </div>
                 <div className="pure-control-group">
                   <label htmlFor="senha">Senha</label>
-                  <input id="senha" type="password" name="senha" />
+                  <input id="senha" type="password" name="senha" value={this.state.senha} onChange={this.setSenha}/>
                 </div>
                 <div className="pure-control-group">
                   <label />
                   <button
                     type="submit"
-                    className="pure-button pure-button-primary"
-                  >
+                    className="pure-button pure-button-primary">
                     Gravar
                   </button>
                 </div>
@@ -94,7 +123,7 @@ class App extends Component {
             <div>
               <table className="pure-table">
                 <thead>
-                  <tr>
+                  <tr>                
                     <th>Nome</th>
                     <th>email</th>
                   </tr>
@@ -103,7 +132,7 @@ class App extends Component {
                   {
                     this.state.lista.map(autor => {
                       return (
-                        <tr key="{autor.id}">
+                        <tr key="{autor.nome}">
                           <td>{autor.nome}</td>
                           <td>{autor.email}</td>
                         </tr>
